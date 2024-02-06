@@ -16,9 +16,10 @@ const routeGithub = (githubService, router) => {
       return res.status(400).send('writeTeamAccess is required');
     }
 
-    const result = await githubService.createRepo(req.params.name, req.body.public);
-    if (result.err) {
-      return res.status(500).send(result.err);
+    try {
+      await githubService.createRepo(req.params.name, req.body.public);
+    } catch (err) {
+      return res.status(500).send(err);
     }
     res.send('Repo created');
   });
