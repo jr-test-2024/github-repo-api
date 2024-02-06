@@ -3,7 +3,12 @@ const bodyParser = require('body-parser');
 const routeGithub = (githubService, router) => {
 
   router.get('/repos', async (req, res) => {
-    res.send('A list of repos')
+    githubService.getRepos().catch(err => {
+      res.status(500).send(err)
+    }).then(response => {
+      var repoList = response.data.map(repo => repo.name);
+      res.send(repoList);
+    });
   });
 
   router.post('/repo/:name', bodyParser.json(), async (req, res) => {
