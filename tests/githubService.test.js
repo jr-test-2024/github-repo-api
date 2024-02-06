@@ -31,8 +31,8 @@ describe('Creating a new repository', () => {
 
   it('should submit a repository name', (done) => {
     const githubClient = {
-      createRepo: (name) => new Promise((resolve) => {
-        name.should.equal('newRepo');
+      createRepo: (options) => new Promise((resolve) => {
+        options.name.should.equal('newRepo');
         done()
         return resolve({})
       })
