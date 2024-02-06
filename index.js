@@ -1,5 +1,7 @@
 const express = require('express');
 const startServer = require('./src/server');
-const githubService = require('./src/github')();
+
+const githubClient = require('./src/githubClient')();
+const githubService = require('./src/github')(githubClient);
 
 startServer(express, githubService);
