@@ -8,11 +8,11 @@ describe('GET /github/repos', () => {
       .get('/github/repos')
       .expect(200)
       .end((err, res) => {
+
+        server.server.close();
         if (err) return done(err);
         // Add your assertions here
         done();
-
-        server.server.close();
       });
   });
 });
@@ -34,11 +34,11 @@ describe('POST /github/repo/my-repo', () => {
 
     request(server.app)
       .post('/github/repo/my-repo')
-      .send({})
+      .send({ writeTeamAccess: ['my-team'] })
       .expect(200)
       .end((err, res) => {
-        if (err) return done(err);
         server.server.close();
+        if (err) return done(err);
 
         // Add your assertions here
         specifiedName.should.equal('my-repo');
@@ -61,7 +61,7 @@ describe('POST /github/repo/my-repo', () => {
 
     request(server.app)
       .post('/github/repo/my-repo')
-      .send({ public: true })
+      .send({ public: true, writeTeamAccess: ['my-team'] })
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
@@ -87,8 +87,8 @@ describe('POST /github/repo/my-repo', () => {
       .send({})
       .expect(400)
       .end((err, res) => {
-        if (err) return done(err);
         server.server.close();
+        if (err) return done(err);
         done();
       });
   });
