@@ -1,16 +1,9 @@
-const createRouter = function (expressRouter) {
-  expressRouter.get('/repos', (req, res) => {
-    // Handle GET request for /api/users
-    res.json({ message: 'Get all users' });
-  });
+const githubRoutes = require('./routes/github');
 
-  expressRouter.post('/users', (req, res) => {
-    // Handle POST request for /api/users
-    res.json({ message: 'Create a new user' });
-  });
+const createRouter = function (expressRouter) {
+  expressRouter.use('/github', githubRoutes({}, expressRouter));
 
   return expressRouter;
 }
 
-// Export the router
 module.exports = createRouter;
