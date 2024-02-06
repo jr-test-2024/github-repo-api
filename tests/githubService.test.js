@@ -14,3 +14,18 @@ describe('Getting a list of repositories', () => {
     }).catch(err => done(err));
   })
 });
+
+describe('Creating a new repository', () => {
+  it('should make a request to create a new repository', (done) => {
+    const githubClient = {
+      createRepo: () => new Promise((resolve) => {
+        done()
+        return resolve({})
+      })
+    };
+
+    githubService = require('../src/github')(githubClient);
+
+    githubService.createRepo('newRepo').catch(err => done(err));
+  });
+});
