@@ -28,4 +28,18 @@ describe('Creating a new repository', () => {
 
     githubService.createRepo('newRepo').catch(err => done(err));
   });
+
+  it('should submit a repository name', (done) => {
+    const githubClient = {
+      createRepo: (name) => new Promise((resolve) => {
+        name.should.equal('newRepo');
+        done()
+        return resolve({})
+      })
+    };
+
+    githubService = require('../src/github')(githubClient);
+
+    githubService.createRepo('newRepo').catch(err => done(err));
+  });
 });
