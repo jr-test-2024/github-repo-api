@@ -57,6 +57,20 @@ describe('Creating a new repository', () => {
     githubService.createRepo('newRepo', true).catch(err => done(err));
   });
 
+  it('should submit public as false if public is not set', (done) => {
+    const githubClient = {
+      createRepo: (options) => new Promise((resolve) => {
+        options.public.should.equal(false);
+        done()
+        return resolve({})
+      })
+    };
+
+    githubService = require('../src/github')(githubClient);
+
+    githubService.createRepo('newRepo').catch(err => done(err));
+  });
+
   it('should submit a set of team names for write access', (done) => {
     const githubClient = {
       createRepo: (options) => new Promise((resolve) => {

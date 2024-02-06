@@ -72,31 +72,4 @@ describe('POST /github/repo/my-repo', () => {
         done();
       });
   });
-
-  it('should create a private repo when public is not set', (done) => {
-    let specifiedPublic = true;
-    function fakeCreateRepo(name, public) {
-      specifiedPublic = public;
-      return new Promise((resolve) => {
-        resolve({});
-      });
-    }
-
-    const server = require('../src/server')(
-      require('express'),
-      { createRepo: fakeCreateRepo });
-
-    request(server.app)
-      .post('/github/repo/my-repo')
-      .send({})
-      .expect(200)
-      .end((err, res) => {
-        if (err) return done(err);
-        server.server.close();
-        // Add your assertions here
-
-        specifiedPublic.should.equal(false);
-        done();
-      });
-  });
 });
