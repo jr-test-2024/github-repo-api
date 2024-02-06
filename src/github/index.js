@@ -1,7 +1,9 @@
-function createGithubService() {
+function createGithubService(client) {
   return {
     getRepos: function () {
-      return ['repo1', 'repo2'];
+      return client.getRepos();
     }
   };
 }
+
+module.exports = createGithubService;
