@@ -72,4 +72,24 @@ describe('POST /github/repo/my-repo', () => {
         done();
       });
   });
+
+  it('should return a 400 response when no write teams are submitted', (done) => {
+    const server = require('../src/server')(
+      require('express'),
+      {
+        createRepo: () => new Promise((resolve) => {
+          resolve({});
+        })
+      });
+
+    request(server.app)
+      .post('/github/repo/my-repo')
+      .send({})
+      .expect(400)
+      .end((err, res) => {
+        if (err) return done(err);
+        server.server.close();
+        done();
+      });
+  });
 });
