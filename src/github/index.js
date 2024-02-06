@@ -3,10 +3,11 @@ function createGithubService(client) {
     getRepos: function () {
       return client.getRepos();
     },
-    createRepo(name, isPublic) {
+    createRepo(name, isPublic, readAccessTeams) {
       return client.createRepo({
         name: name,
-        public: isPublic
+        public: isPublic,
+        readAccessTeams: readAccessTeams
       });
     }
   };
