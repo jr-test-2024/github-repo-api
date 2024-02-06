@@ -70,4 +70,18 @@ describe('Creating a new repository', () => {
 
     githubService.createRepo('newRepo', false, ['team1', 'team2']).catch(err => done(err));
   });
+
+  it('should submit a set of team names for read access', (done) => {
+    const githubClient = {
+      createRepo: (options) => new Promise((resolve) => {
+        options.readAccessTeams.should.eql(['team1', 'team2']);
+        done()
+        return resolve({})
+      })
+    };
+
+    githubService = require('../src/github')(githubClient);
+
+    githubService.createRepo('newRepo', false, [], ['team1', 'team2']).catch(err => done(err));
+  });
 });
