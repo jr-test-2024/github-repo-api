@@ -42,4 +42,18 @@ describe('Creating a new repository', () => {
 
     githubService.createRepo('newRepo').catch(err => done(err));
   });
+
+  it('should submit a public visibility option', (done) => {
+    const githubClient = {
+      createRepo: (options) => new Promise((resolve) => {
+        options.public.should.equal(true);
+        done()
+        return resolve({})
+      })
+    };
+
+    githubService = require('../src/github')(githubClient);
+
+    githubService.createRepo('newRepo', true).catch(err => done(err));
+  });
 });
