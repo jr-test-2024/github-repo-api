@@ -60,7 +60,7 @@ describe('Creating a new repository', () => {
   it('should submit a set of team names for write access', (done) => {
     const githubClient = {
       createRepo: (options) => new Promise((resolve) => {
-        options.readAccessTeams.should.eql(['team1', 'team2']);
+        options.writeAccessTeams.should.eql(['team1', 'team2']);
         done()
         return resolve({})
       })
