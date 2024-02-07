@@ -17,7 +17,7 @@ const routeGithub = (githubService, router) => {
     }
 
     try {
-      await githubService.createRepo(req.params.name, req.body.public);
+      await githubService.createRepo(req.params.name, req.body, req.body.writeTeamAccess, req.body.readTeamAccess);
     } catch (err) {
       return res.status(500).send(err);
     }

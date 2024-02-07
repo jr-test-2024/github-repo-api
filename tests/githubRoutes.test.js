@@ -52,8 +52,8 @@ describe('POST /github/repo/my-repo', () => {
 
   it('should create a public repo when public is set to true', (done) => {
     let specifiedPublic = false;
-    function fakeCreateRepo(name, public) {
-      specifiedPublic = public;
+    function fakeCreateRepo(name, options) {
+      specifiedPublic = options.public;
       return new Promise((resolve) => {
         resolve({});
       });
