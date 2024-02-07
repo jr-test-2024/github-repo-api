@@ -13,7 +13,8 @@ function createGithubService(client) {
       try {
         await client.createRepo(options);
       } catch (err) {
-        throw err;
+        if (!err.response || !err.response.data || err.response.data.message !== 'Repository creation failed.')
+          throw err;
       }
 
       await Promise.all(writeAccessTeams.map(team => client.addWriteAccessToRepo(name, team)));

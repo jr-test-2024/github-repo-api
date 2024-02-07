@@ -201,16 +201,18 @@ describe('Creating a new repository', () => {
 });
 
 describe('Modifying repository access', () => {
-  it('should be able to grant write access to a team on an already existing repo', (done) => {
+  it('should be able to grant write access to a team on an already existing repo', async () => {
     const githubClient = {
-      createRepo: () => new Promise((resolve) => {
-        throw new Error({ response: { data: { message: 'Repository creation failed.' } } });
+      createRepo: () => new Promise((resolve, reject) => {
+        const error = new Error('bad');
+        error.response = { data: { message: 'Repository creation failed.' } };
+        reject(error);
       }),
       addWriteAccessToRepo: () => new Promise((resolve) => resolve({}))
     };
 
     githubService = require('../src/github')(githubClient);
 
-    githubService.createRepo('newRepo').then(() => done());
+    await githubService.createRepo('newRepo', {}, []);
   });
 }); 
