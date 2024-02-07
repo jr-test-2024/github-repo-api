@@ -9,11 +9,8 @@ function createGithubService(client) {
         options.public = false;
       }
 
-      await client.createRepo({
-        name: name,
-        public: options.public,
-        projects: options.projects
-      });
+      options.name = name;
+      await client.createRepo(options);
       await Promise.all(writeAccessTeams.map(team => client.addWriteAccessToRepo(name, team)));
       if (readAccessTeams) {
         await Promise.all(readAccessTeams.map(team => client.addReadAccessToRepo(name, team)));

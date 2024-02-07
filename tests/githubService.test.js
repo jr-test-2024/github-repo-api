@@ -105,6 +105,21 @@ describe('Creating a new repository', () => {
     githubService.createRepo('newRepo', { projects: true, public: false }, []);
   });
 
+  it('should be able to turn on issues', (done) => {
+    const githubClient = {
+      createRepo: (options) => new Promise((resolve) => {
+        options.issues.should.equal(true);
+        done();
+        return resolve({});
+      }),
+      addWriteAccessToRepo: () => new Promise((resolve) => resolve({}))
+    };
+
+    githubService = require('../src/github')(githubClient);
+
+    githubService.createRepo('newRepo', { issues: true, public: false }, []);
+  });
+
   it('should grant all the teams specified write access', (done) => {
     let callsToGrantAccess = 0;
     const teamsGranted = []
