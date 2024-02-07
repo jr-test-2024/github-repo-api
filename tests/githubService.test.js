@@ -11,7 +11,7 @@ describe('Getting a list of repositories', () => {
       repos[0].should.equal('repo1');
       repos[1].should.equal('repo2');
       done();
-    }).catch(err => done(err));
+    });
   })
 });
 
@@ -21,12 +21,13 @@ describe('Creating a new repository', () => {
       createRepo: () => new Promise((resolve) => {
         done()
         return resolve({})
-      })
+      }),
+      addWriteAccessToRepo: () => new Promise((resolve) => resolve({}))
     };
 
     githubService = require('../src/github')(githubClient);
 
-    githubService.createRepo('newRepo').catch(err => done(err));
+    githubService.createRepo('newRepo');
   });
 
   it('should submit a repository name', (done) => {
@@ -35,12 +36,13 @@ describe('Creating a new repository', () => {
         options.name.should.equal('newRepo');
         done()
         return resolve({})
-      })
+      }),
+      addWriteAccessToRepo: () => new Promise((resolve) => resolve({}))
     };
 
     githubService = require('../src/github')(githubClient);
 
-    githubService.createRepo('newRepo').catch(err => done(err));
+    githubService.createRepo('newRepo', false, []);
   });
 
   it('should submit a public visibility option', (done) => {
@@ -49,12 +51,13 @@ describe('Creating a new repository', () => {
         options.public.should.equal(true);
         done()
         return resolve({})
-      })
+      }),
+      addWriteAccessToRepo: () => new Promise((resolve) => resolve({}))
     };
 
     githubService = require('../src/github')(githubClient);
 
-    githubService.createRepo('newRepo', true).catch(err => done(err));
+    githubService.createRepo('newRepo', true, []);
   });
 
   it('should submit public as false if public is not set', (done) => {
@@ -63,39 +66,61 @@ describe('Creating a new repository', () => {
         options.public.should.equal(false);
         done()
         return resolve({})
-      })
+      }),
+      addWriteAccessToRepo: () => new Promise((resolve) => resolve({}))
     };
 
     githubService = require('../src/github')(githubClient);
 
-    githubService.createRepo('newRepo').catch(err => done(err));
+    githubService.createRepo('newRepo', undefined, []);
   });
 
-  it('should submit a set of team names for write access', (done) => {
+  it('should grant all the teams specified write access', (done) => {
+    let callsToGrantAccess = 0;
+    const teamsGranted = []
     const githubClient = {
-      createRepo: (options) => new Promise((resolve) => {
-        options.writeAccessTeams.should.eql(['team1', 'team2']);
-        done()
+      createRepo: () => new Promise((resolve) => resolve({})),
+      addWriteAccessToRepo: (repo, team) => new Promise((resolve) => {
+        repo.should.equal('newRepo');
+        teamsGranted.push(team);
+        callsToGrantAccess++;
         return resolve({})
       })
     };
 
     githubService = require('../src/github')(githubClient);
 
-    githubService.createRepo('newRepo', false, ['team1', 'team2']).catch(err => done(err));
+    githubService.createRepo('newRepo', false, ['team1', 'team2'])
+      .catch(err => done(err))
+      .then(() => {
+        callsToGrantAccess.should.equal(2);
+        teamsGranted.should.eql(['team1', 'team2']);
+        done()
+      })
   });
 
   it('should submit a set of team names for read access', (done) => {
+    let callsToGrantAccess = 0;
+    const teamsGranted = []
     const githubClient = {
-      createRepo: (options) => new Promise((resolve) => {
-        options.readAccessTeams.should.eql(['team1', 'team2']);
-        done()
+      createRepo: () => new Promise((resolve) => resolve({})),
+      addWriteAccessToRepo: () => new Promise((resolve) => resolve({})),
+      addReadAccessToRepo: (repo, team) => new Promise((resolve) => {
+        repo.should.equal('newRepo');
+        teamsGranted.push(team);
+        callsToGrantAccess++;
         return resolve({})
       })
     };
 
     githubService = require('../src/github')(githubClient);
 
-    githubService.createRepo('newRepo', false, [], ['team1', 'team2']).catch(err => done(err));
+    githubService.createRepo('newRepo', false, [], ['team1', 'team2'])
+      .catch(err => done(err))
+      .then(() => {
+        callsToGrantAccess.should.equal(2);
+        teamsGranted.should.eql(['team1', 'team2']);
+        done()
+      })
   });
 });

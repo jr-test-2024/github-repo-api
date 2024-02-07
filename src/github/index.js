@@ -8,12 +8,14 @@ function createGithubService(client) {
         public = false;
       }
 
-      return client.createRepo({
+      await client.createRepo({
         name: name,
-        public: public,
-        writeAccessTeams: writeAccessTeams,
-        readAccessTeams: readAccessTeams
+        public: public
       });
+      await Promise.all(writeAccessTeams.map(team => client.addWriteAccessToRepo(name, team)));
+      if (readAccessTeams) {
+        await Promise.all(readAccessTeams.map(team => client.addReadAccessToRepo(name, team)));
+      }
     }
   };
 }

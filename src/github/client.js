@@ -13,10 +13,20 @@ function createGithubClient() {
         type: 'all'
       })
     },
-    createRepo(options) {
-      return octokitClient.request(`POST /orgs/${orgName}/repos`, {
+    createRepo: async function (options) {
+      return await octokitClient.request(`POST /orgs/${orgName}/repos`, {
         name: options.name,
         private: !options.public
+      })
+    },
+    addWriteAccessToRepo: async function (repoName, teamName) {
+      return await octokitClient.request(`PUT /repos/${orgName}/${repoName}/teams/${teamName}`, {
+        permission: 'push'
+      })
+    },
+    addReadAccessToRepo: async function (repoName, teamName) {
+      return await octokitClient.request(`PUT /repos/${orgName}/${repoName}/teams/${teamName}`, {
+        permission: 'pull'
       })
     }
   };
