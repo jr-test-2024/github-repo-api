@@ -19,6 +19,8 @@ function createGithubClient() {
         private: !options.public,
         has_projects: options.projects,
         has_issues: options.issues,
+        has_discussions: options.discussions,
+        has_wiki: options.wiki
       })
     },
     addWriteAccessToRepo: async function (repoName, teamName) {

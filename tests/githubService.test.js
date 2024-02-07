@@ -120,6 +120,36 @@ describe('Creating a new repository', () => {
     githubService.createRepo('newRepo', { issues: true, public: false }, []);
   });
 
+  it('should be able to turn on discussions', (done) => {
+    const githubClient = {
+      createRepo: (options) => new Promise((resolve) => {
+        options.discussions.should.equal(true);
+        done();
+        return resolve({});
+      }),
+      addWriteAccessToRepo: () => new Promise((resolve) => resolve({}))
+    };
+
+    githubService = require('../src/github')(githubClient);
+
+    githubService.createRepo('newRepo', { discussions: true, public: false }, []);
+  });
+
+  it('should be able to turn on wikis', (done) => {
+    const githubClient = {
+      createRepo: (options) => new Promise((resolve) => {
+        options.wikis.should.equal(true);
+        done();
+        return resolve({});
+      }),
+      addWriteAccessToRepo: () => new Promise((resolve) => resolve({}))
+    };
+
+    githubService = require('../src/github')(githubClient);
+
+    githubService.createRepo('newRepo', { wikis: true, public: false }, []);
+  });
+
   it('should grant all the teams specified write access', (done) => {
     let callsToGrantAccess = 0;
     const teamsGranted = []
