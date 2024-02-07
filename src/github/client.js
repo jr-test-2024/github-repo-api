@@ -16,7 +16,8 @@ function createGithubClient() {
     createRepo: async function (options) {
       return await octokitClient.request(`POST /orgs/${orgName}/repos`, {
         name: options.name,
-        private: !options.public
+        private: !options.public,
+        has_projects: options.projects
       })
     },
     addWriteAccessToRepo: async function (repoName, teamName) {
