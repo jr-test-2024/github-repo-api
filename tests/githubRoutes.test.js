@@ -2,18 +2,22 @@ const request = require('supertest');
 require('should');
 
 describe('GET /github/repos', () => {
-  const server = require('../src/server')(require('express'), require('../src/github')());
+  function fakeGetRepos() {
+    return new Promise((resolve) => {
+      resolve({ data: ['repo1', 'repo2'] });
+    });
+  }
+  const server = require('../src/server')(require('express'), { getRepos: fakeGetRepos });
   it('should return a 200 response', (done) => {
     request(server.app)
       .get('/github/repos')
       .expect(200)
       .end((err, res) => {
-
-        server.server.close();
         if (err) return done(err);
         // Add your assertions here
         done();
       });
+    server.server.close();
   });
 });
 
@@ -37,13 +41,13 @@ describe('POST /github/repo/my-repo', () => {
       .send({ writeTeamAccess: ['my-team'] })
       .expect(200)
       .end((err, res) => {
-        server.server.close();
         if (err) return done(err);
 
         // Add your assertions here
         specifiedName.should.equal('my-repo');
         done();
       });
+    server.server.close();
   });
 
   it('should create a public repo when public is set to true', (done) => {
@@ -65,12 +69,12 @@ describe('POST /github/repo/my-repo', () => {
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
-        server.server.close();
         // Add your assertions here
 
         specifiedPublic.should.equal(true);
         done();
       });
+    server.server.close();
   });
 
   it('should return a 400 response when no write teams are submitted', (done) => {
@@ -87,9 +91,9 @@ describe('POST /github/repo/my-repo', () => {
       .send({})
       .expect(400)
       .end((err, res) => {
-        server.server.close();
         if (err) return done(err);
         done();
       });
+    server.server.close();
   });
 });

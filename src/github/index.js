@@ -3,7 +3,7 @@ function createGithubService(client) {
     getRepos: function () {
       return client.getRepos();
     },
-    createRepo(name, public, writeAccessTeams, readAccessTeams) {
+    createRepo: async function (name, public, writeAccessTeams, readAccessTeams) {
       if (public === undefined) {
         public = false;
       }

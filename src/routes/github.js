@@ -4,7 +4,7 @@ const routeGithub = (githubService, router) => {
 
   router.get('/repos', async (req, res) => {
     githubService.getRepos().catch(err => {
-      res.status(500).send(err)
+      return res.status(500).send(err)
     }).then(response => {
       var repoList = response.data.map(repo => repo.name);
       res.send(repoList);
