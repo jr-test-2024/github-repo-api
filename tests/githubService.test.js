@@ -30,21 +30,6 @@ describe('Creating a new repository', () => {
     githubService.createRepo('newRepo');
   });
 
-  it('should be able to turn on projects', (done) => {
-    const githubClient = {
-      createRepo: (options) => new Promise((resolve) => {
-        options.projects.should.equal(true);
-        done();
-        return resolve({});
-      }),
-      addWriteAccessToRepo: () => new Promise((resolve) => resolve({}))
-    };
-
-    githubService = require('../src/github')(githubClient);
-
-    githubService.createRepo('newRepo', { projects: true, public: false }, []);
-  });
-
   it('should submit a repository name', (done) => {
     const githubClient = {
       createRepo: (options) => new Promise((resolve) => {
@@ -72,7 +57,22 @@ describe('Creating a new repository', () => {
 
     githubService = require('../src/github')(githubClient);
 
-    githubService.createRepo('newRepo', true, []);
+    githubService.createRepo('newRepo', { public: true }, []);
+  });
+
+  it('should submit public as false if options is not set', (done) => {
+    const githubClient = {
+      createRepo: (options) => new Promise((resolve) => {
+        options.public.should.equal(false);
+        done()
+        return resolve({})
+      }),
+      addWriteAccessToRepo: () => new Promise((resolve) => resolve({}))
+    };
+
+    githubService = require('../src/github')(githubClient);
+
+    githubService.createRepo('newRepo', undefined, []);
   });
 
   it('should submit public as false if public is not set', (done) => {
@@ -87,7 +87,22 @@ describe('Creating a new repository', () => {
 
     githubService = require('../src/github')(githubClient);
 
-    githubService.createRepo('newRepo', undefined, []);
+    githubService.createRepo('newRepo', {}, []);
+  });
+
+  it('should be able to turn on projects', (done) => {
+    const githubClient = {
+      createRepo: (options) => new Promise((resolve) => {
+        options.projects.should.equal(true);
+        done();
+        return resolve({});
+      }),
+      addWriteAccessToRepo: () => new Promise((resolve) => resolve({}))
+    };
+
+    githubService = require('../src/github')(githubClient);
+
+    githubService.createRepo('newRepo', { projects: true, public: false }, []);
   });
 
   it('should grant all the teams specified write access', (done) => {
