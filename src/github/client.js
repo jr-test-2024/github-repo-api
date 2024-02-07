@@ -24,12 +24,12 @@ function createGithubClient() {
       })
     },
     addWriteAccessToRepo: async function (repoName, teamName) {
-      return await octokitClient.request(`PUT /repos/${orgName}/${repoName}/teams/${teamName}`, {
+      return await octokitClient.request(`PUT /orgs/${orgName}/teams/${teamName}/repos/${orgName}/${repoName}`, {
         permission: 'push'
       })
     },
     addReadAccessToRepo: async function (repoName, teamName) {
-      return await octokitClient.request(`PUT /repos/${orgName}/${repoName}/teams/${teamName}`, {
+      return await octokitClient.request(`PUT /orgs/${orgName}/teams/${teamName}/repos/${orgName}/${repoName}`, {
         permission: 'pull'
       })
     }
