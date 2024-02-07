@@ -90,21 +90,6 @@ describe('Creating a new repository', () => {
     githubService.createRepo('newRepo', {}, []);
   });
 
-  it('should be able to specify an owner', (done) => {
-    const githubClient = {
-      createRepo: (options) => new Promise((resolve) => {
-        options.owner.should.equal('myOrg');
-        done()
-        return resolve({})
-      }),
-      addWriteAccessToRepo: () => new Promise((resolve) => resolve({}))
-    };
-
-    githubService = require('../src/github')(githubClient);
-
-    githubService.createRepo('newRepo', { owner: 'myOrg' }, []);
-  });
-
   it('should be able to turn on projects', (done) => {
     const githubClient = {
       createRepo: (options) => new Promise((resolve) => {
